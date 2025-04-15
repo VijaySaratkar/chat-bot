@@ -1,6 +1,6 @@
 import { LogoutOutlined, SendOutlined } from '@ant-design/icons';
-import { Avatar, Dropdown, Input, List, Menu, Typography } from 'antd';
-import React, { useState } from 'react';
+import { Avatar, Dropdown, Input, List, Typography, message as antMessage } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
 import API from '../utils/api';
 import { logout } from '../utils/auth';
 
@@ -8,23 +8,31 @@ const Chat = () => {
     const [message, setMessage] = useState('');
     const [chatLog, setChatLog] = useState([]);
     const [loading, setLoading] = useState(false);
-    const userName = localStorage.getItem("username")
+    const userName = localStorage.getItem("username");
+    const chatBoxRef = useRef(null);
+
+    useEffect(() => {
+        if (chatBoxRef.current) {
+            chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
+        }
+    }, [chatLog]); 
 
     const sendMessage = async () => {
         if (message.trim() && !loading) {
             setLoading(true);
             try {
                 const res = await API.post('/chat', { message });
-                setChatLog([...chatLog, { user: message, bot: res.data.reply }]);
+                console.log(loading)
+                setChatLog(prev => [...prev, { user: message, bot: res.data.reply }]);
                 setMessage('');
+
             } catch (error) {
-                console.error('Chat API error:', error);
                 if (error.response) {
-                    message.error(error.response.data.message || 'Server Error');
+                    antMessage.error(error.response.data.message || 'Server Error');
                 } else if (error.request) {
-                    message.error('No response from server. Please try again.');
+                    antMessage.error('No response from server. Please try again.');
                 } else {
-                    message.error('Something went wrong. Please try later.');
+                    antMessage.error('Something went wrong. Please try later.');
                 }
             } finally {
                 setLoading(false);
@@ -32,18 +40,18 @@ const Chat = () => {
         }
     };
 
-
     const handleLogout = () => {
-        logout()
+        logout();
     };
 
-    const avatarMenu = (
-        <Menu>
-            <Menu.Item onClick={handleLogout} icon={<LogoutOutlined color='red' style={{ color: "red" }} />}>
-                Logout
-            </Menu.Item>
-        </Menu>
-    );
+    const items = [
+        {
+            key: 'logout',
+            label: 'Logout',
+            icon: <LogoutOutlined style={{ color: 'red' }} />,
+            onClick: handleLogout,
+        },
+    ];
 
     return (
         <div style={styles.chatContainer}>
@@ -53,12 +61,19 @@ const Chat = () => {
                     <span style={styles.chatName}>ChatBuddy</span>
                 </div>
                 <div style={styles.headerRight}>
-                    <Dropdown overlay={avatarMenu} trigger={['click']} style={styles.avatarContainer}>
-                        <Avatar style={styles.avatar}>{userName.charAt(0).toUpperCase()}</Avatar>
+                    <Dropdown
+                        menu={{ items }}
+                        trigger={['click']}
+                        placement="bottomRight"
+                    >
+                        <Avatar style={styles.avatar}>
+                            {userName.charAt(0).toUpperCase()}
+                        </Avatar>
                     </Dropdown>
                 </div>
             </div>
-            <div style={styles.chatMessagesContainer}>
+
+            <div ref={chatBoxRef} style={styles.chatMessagesContainer}>
                 <List
                     dataSource={chatLog}
                     renderItem={(item, index) => (
@@ -106,8 +121,10 @@ const styles = {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        height: '100dvh', 
+        height: '100vh',
         backgroundColor: '#f4f7fc',
+        position: 'relative', // ensure absolute positioning works inside
+        overflow: 'hidden',
     },
     chatHeader: {
         fontSize: '24px',
@@ -138,9 +155,6 @@ const styles = {
         marginLeft: '10px',
         fontSize: '20px',
     },
-    avatarContainer: {
-        cursor: 'pointer',
-    },
     avatar: {
         backgroundColor: 'rgb(62 69 76)',
         cursor: 'pointer',
@@ -148,7 +162,8 @@ const styles = {
     chatMessagesContainer: {
         flex: 1,
         overflowY: 'auto',
-        paddingTop: '60px',
+        paddingTop: '70px',
+        paddingBottom: '100px',
         paddingLeft: '16px',
         paddingRight: '16px',
     },
@@ -184,7 +199,7 @@ const styles = {
         padding: '10px',
         backgroundColor: '#fff',
         borderTop: '1px solid #f0f0f0',
-        position: 'sticky',
+        position: 'absolute', 
         bottom: 0,
         left: 0,
         right: 0,
@@ -197,7 +212,6 @@ const styles = {
     },
     sendIcon: {
         fontSize: '20px',
-        cursor: 'pointer',
     },
 };
 
