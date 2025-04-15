@@ -7,7 +7,7 @@ import { logout } from '../utils/auth';
 const Chat = () => {
     const [message, setMessage] = useState('');
     const [chatLog, setChatLog] = useState([]);
-    const [loading, setLoading] = useState(false); 
+    const [loading, setLoading] = useState(false);
     const userName = localStorage.getItem("username")
 
     const sendMessage = async () => {
@@ -31,7 +31,7 @@ const Chat = () => {
             }
         }
     };
-    
+
 
     const handleLogout = () => {
         logout()
@@ -47,15 +47,17 @@ const Chat = () => {
 
     return (
         <div style={styles.chatContainer}>
-            {/* Header with title */}
             <div style={styles.chatHeader}>
-                ChatBuddy
-                <Dropdown overlay={avatarMenu} trigger={['click']} style={styles.avatarContainer}>
-                    <Avatar style={styles.avatar}>{userName.charAt(0).toUpperCase()}</Avatar>
-                </Dropdown>
+                <div style={styles.headerLeft}>
+                    <img src="/ChatBuddy.png" alt="ChatBuddy" style={{ height: '30px', width: '30px' }} />
+                    <span style={styles.chatName}>ChatBuddy</span>
+                </div>
+                <div style={styles.headerRight}>
+                    <Dropdown overlay={avatarMenu} trigger={['click']} style={styles.avatarContainer}>
+                        <Avatar style={styles.avatar}>{userName.charAt(0).toUpperCase()}</Avatar>
+                    </Dropdown>
+                </div>
             </div>
-
-            {/* Chat messages */}
             <div style={styles.chatMessagesContainer}>
                 <List
                     dataSource={chatLog}
@@ -82,7 +84,7 @@ const Chat = () => {
                     onChange={(e) => setMessage(e.target.value)}
                     onPressEnter={sendMessage}
                     style={styles.inputField}
-                    disabled={loading} 
+                    disabled={loading}
                     suffix={
                         <SendOutlined
                             onClick={sendMessage}
@@ -99,7 +101,6 @@ const Chat = () => {
     );
 };
 
-// Styles for better UI
 const styles = {
     chatContainer: {
         display: 'flex',
@@ -125,6 +126,18 @@ const styles = {
         alignItems: 'center',
         paddingRight: '20px',
     },
+    headerLeft: {
+        display: 'flex',
+        alignItems: 'center',
+    },
+    headerRight: {
+        display: 'flex',
+        alignItems: 'center',
+    },
+    chatName: {
+        marginLeft: '10px',
+        fontSize: '20px',
+    },
     avatarContainer: {
         cursor: 'pointer',
     },
@@ -133,8 +146,8 @@ const styles = {
         cursor: 'pointer',
     },
     chatMessagesContainer: {
-        flex: 1, 
-        overflowY: 'auto', 
+        flex: 1,
+        overflowY: 'auto',
         paddingTop: '60px',
         paddingLeft: '16px',
         paddingRight: '16px',
@@ -160,7 +173,7 @@ const styles = {
         wordWrap: 'break-word',
         display: 'inline-block',
         fontSize: '14px',
-        alignSelf: 'flex-start', 
+        alignSelf: 'flex-start',
         marginBottom: "44px",
     },
     botName: {
