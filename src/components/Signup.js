@@ -52,7 +52,7 @@ const Signup = () => {
                         </Button>
                         <br />
                         <br />
-                        Already a member? <Link style={{ cursor: "pointer" }} to='/login' >Login</Link>
+                        Already a member? <Link style={{ cursor: "pointer" }} to='/login' >Sign-In</Link>
                     </Card>
                 </Col>
             </Row>

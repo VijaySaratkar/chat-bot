@@ -106,7 +106,7 @@ const styles = {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        height: '100vh',
+        height: '100dvh', 
         backgroundColor: '#f4f7fc',
     },
     chatHeader: {
@@ -184,7 +184,7 @@ const styles = {
         padding: '10px',
         backgroundColor: '#fff',
         borderTop: '1px solid #f0f0f0',
-        position: 'fixed',
+        position: 'sticky',
         bottom: 0,
         left: 0,
         right: 0,
