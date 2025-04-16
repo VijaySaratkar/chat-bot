@@ -5,6 +5,7 @@ import Signup from './components/Signup';
 import Home from './pages/Home';
 import { getToken } from './utils/auth';
 import 'antd/dist/reset.css';
+// import 'antd/dist/antd.css';
 
 
 const App = () => {

@@ -10,12 +10,13 @@ const Chat = () => {
     const [loading, setLoading] = useState(false);
     const userName = localStorage.getItem("username");
     const chatBoxRef = useRef(null);
+    console.log("<<<<<<<<<chatLog>>>>>>>>>", chatLog);
 
     useEffect(() => {
         if (chatBoxRef.current) {
             chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
         }
-    }, [chatLog]); 
+    }, [chatLog]);
 
     const sendMessage = async () => {
         if (message.trim() && !loading) {
@@ -83,13 +84,64 @@ const Chat = () => {
                                     <Typography.Text strong>You:</Typography.Text> {item.user}
                                 </div>
                                 <div style={styles.botMessageBubble}>
-                                    <div style={styles.botName}>Bot</div>
-                                    <Typography.Text>{item.bot}</Typography.Text>
+                                    <div style={styles.botCardHeader}>
+                                        <span style={styles.botName}>Bot</span>
+                                    </div>
+                                    <div
+                                        style={styles.botResponse}
+                                        contentEditable="false"
+                                        dangerouslySetInnerHTML={{
+                                            __html: (() => {
+                                                const lines = item.bot.split('\n');
+                                                let inCodeBlock = false;
+                                                let codeBlockLang = '';
+                                                let currentCode = '';
+                                                let html = '';
+
+                                                lines.forEach(line => {
+                                                    if (line.trim().startsWith('```')) {
+                                                        if (!inCodeBlock) {
+                                                            // Start of code block
+                                                            inCodeBlock = true;
+                                                            codeBlockLang = line.trim().slice(3); // e.g., "bash", "js"
+                                                            currentCode = '';
+                                                        } else {
+                                                            // End of code block
+                                                            inCodeBlock = false;
+
+                                                            html += `
+                                                                <div style="background: white; padding: 12px 16px;box-shadow: skyblue 0px 0px 12px; border-radius: 12px; position: relative; margin-bottom: 10px;">
+                                                                    <button onclick="navigator.clipboard.writeText(\`${currentCode.replace(/`/g, '\\`')}\`);window.dispatchEvent(new CustomEvent('copied'))"
+                                                                        style="position: absolute; top: 8px; right: 8px; border: none; background: transparent; cursor: pointer;">
+                                                                        📋
+                                                                    </button>
+                                                                    <pre style="margin: 0; white-space: pre-wrap;"><code>${currentCode}</code></pre>
+                                                                </div>
+                                                            `;
+                                                        }
+                                                    } else if (inCodeBlock) {
+                                                        currentCode += `${line}\n`;
+                                                    } else {
+                                                        // Normal content formatting
+                                                        line = line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                                                        line = line.replace(/`([^`]+)`/g, '<code>$1</code>');
+                                                        line = line.replace(/\[([^\]]+)\]\((http[^\)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+                                                        html += `<p>${line}</p>`;
+                                                    }
+                                                });
+
+                                                return html;
+                                            })()
+                                        }}
+
+                                    />
                                 </div>
+
                             </div>
                         </List.Item>
                     )}
                 />
+
             </div>
 
             <div style={styles.inputContainer}>
@@ -121,9 +173,9 @@ const styles = {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        height: '100vh',
+        height: '99vh',
         backgroundColor: '#f4f7fc',
-        position: 'relative', // ensure absolute positioning works inside
+        position: 'relative',
         overflow: 'hidden',
     },
     chatHeader: {
@@ -199,7 +251,7 @@ const styles = {
         padding: '10px',
         backgroundColor: '#fff',
         borderTop: '1px solid #f0f0f0',
-        position: 'absolute', 
+        position: 'absolute',
         bottom: 0,
         left: 0,
         right: 0,
@@ -208,10 +260,16 @@ const styles = {
     inputField: {
         borderRadius: '20px',
         paddingLeft: '15px',
-        height: '40px',
+        height: '50px',
     },
     sendIcon: {
         fontSize: '20px',
+    },
+    botCardHeader: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: '8px',
     },
 };
 
