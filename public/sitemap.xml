@@ -1,0 +1,31 @@
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="%PUBLIC_URL%/ChatBuddy.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="ChatBuddy is a smart chatbot created by Vijay Saratkar. Try the next-gen AI experience now!" />
+  <meta name="keywords" content="ChatBuddy, Vijay ChatBuddy, Vijay Saratkar, chatbot app, AI bot, Vijay Developer, Vijay AI chatbot" />
+  <meta name="author" content="Vijay Saratkar" />
+  <meta name="robots" content="index, follow" />
+  
+  <!-- Open Graph (for Facebook/LinkedIn sharing) -->
+  <meta property="og:title" content="ChatBuddy by Vijay Saratkar" />
+  <meta property="og:description" content="A next-gen AI chatbot designed by Vijay Saratkar." />
+  <meta property="og:image" content="%PUBLIC_URL%/ChatBuddy.png" />
+  <meta property="og:url" content="https://your-domain.com" />
+  <meta property="og:type" content="website" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:title" content="ChatBuddy by Vijay Saratkar">
+  <meta name="twitter:description" content="A smart AI chatbot experience. Created by Vijay Saratkar.">
+  <meta name="twitter:image" content="%PUBLIC_URL%/ChatBuddy.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Web App Settings -->
+  <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+  
+  <title>ChatBuddy by Vijay Saratkar - Smart AI Chatbot</title>
+</head>
